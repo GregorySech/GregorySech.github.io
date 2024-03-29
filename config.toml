@@ -1,11 +1,23 @@
 # The URL the site will be built for
 base_url = "https://gregorysech.github.io"
 
+title = "Gregory Sech"
+
+description = "Likes problems and solutions."
+
+default_language = "en"
+
+
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
+
+theme = "anatole-zola"
+taxonomies = [
+    {name = "tags"},
+]
 
 [markdown]
 # Whether to do syntax highlighting
@@ -13,4 +25,40 @@ build_search_index = true
 highlight_code = true
 
 [extra]
-# Put all your custom variables here
+author = "Gregory Sech"
+[extra.show]
+tags = true
+[extra.social]
+github = "https://github.com/GregorySech"
+instagram = "https://www.instagram.com/gregorysech/"
+linkedin = "https://www.linkedin.com/in/gregory-sech-2bba64104/"
+
+[languages.en.translations]
+language_name = "English"
+about = "About"
+home = "Home"
+tags = "Tags"
+archive = "Archive"
+links = "Links"
+date_format = "%Y-%m-%d"
+next_page = "Next Page"
+last_page = "Last Page"
+
+
+[languages.it]
+title = "Gregory Sech"
+description = "Likes problems and solutions."
+taxonomies = [
+    {name = "tags"},
+]
+
+[languages.it.translations]
+language_name = "Italiano"
+about = "Info"
+home = "Home"
+tags = "Tags"
+archive = "Archivio"
+links = "Collegamenti"
+date_format = "%Y-%m-%d"
+next_page = "Prossima pagina"
+last_page = "Pagina precedente"
