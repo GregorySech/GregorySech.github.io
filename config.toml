@@ -1,12 +1,7 @@
 # The URL the site will be built for
 base_url = "https://gregorysech.github.io"
 
-title = "Gregory Sech"
-
-description = "Likes problems and solutions."
-
 default_language = "en"
-
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
@@ -15,9 +10,6 @@ compile_sass = true
 build_search_index = true
 
 theme = "anatole-zola"
-taxonomies = [
-    {name = "tags"},
-]
 
 [markdown]
 # Whether to do syntax highlighting
@@ -32,6 +24,13 @@ tags = true
 github = "https://github.com/GregorySech"
 instagram = "https://www.instagram.com/gregorysech/"
 linkedin = "https://www.linkedin.com/in/gregory-sech-2bba64104/"
+
+[languages.en]
+title = "Gregory Sech"
+description = "Likes problems and solutions."
+taxonomies = [
+    {name = "tags"},
+]
 
 [languages.en.translations]
 language_name = "English"
