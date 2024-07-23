@@ -7,7 +7,7 @@ tags = ["GitLab", "Python", "Poetry", "CICD", "Docker"]
 +++
 
 Automating tests on code push is a simple way to ensure that writing new code is not breaking the behaviour of the existing software.
-For sure developers will need to put in the time and effort to translate the software requirements in programmatic checks however, their automation reduces the time required to assure quality.
+For sure developers will need to put in the time and effort to translate the software requirements in programmatic checks however, their automation reduces the overall time required to assure quality.
 
 The Max Planck Computing and Data Facility (MPCDF) [published a nice tutorial](https://docs.mpcdf.mpg.de/doc/data/gitlab/devop-tutorial.html) on their wiki on using [GitLab's Pipelines](https://docs.gitlab.com/ee/ci/pipelines/) to automate tests for Python projects using [Poetry](https://python-poetry.org/). 
 
