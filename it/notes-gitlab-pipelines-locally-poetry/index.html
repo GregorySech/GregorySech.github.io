@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en"  class="theme--light" >
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://gregorysech.github.io/images/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://gregorysech.github.io/images/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://gregorysech.github.io/images/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://gregorysech.github.io/images/apple-touch-icon-57x57.png" />
+  <link rel="short icon" href="https://gregorysech.github.io/images/favicon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://gregorysech.github.io/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+  <title>Gregory Sech • Note su GitLab Pipelines locali in un progetto Poetry</title>
+  
+  
+  
+</head>
+
+<body>
+  <div id="sidebar" class="animated fadeInDown">
+    <div class="logo-title">
+      <div class="title">
+        <img src=https://gregorysech.github.io/images/logo@2x.png style="width:127px;" alt="logo" />
+        <h3><a href="https://gregorysech.github.io/it/">Gregory Sech</a></h3>
+        <div class="description">
+          <p>Likes problems and solutions.</p>
+        </div>
+      </div>
+    </div>
+    <ul class="social-links"><li><a href="https://github.com/GregorySech" aria-label="Go to Github profile page"><i class="fab fa-github"></i></a></li><li><a href="https://gitlab.com/GregorySech" aria-label="Go to Gitlab profile page"><i class="fab fa-gitlab"></i></a></li><li><a href="https://www.instagram.com/gregorysech" aria-label="Go to Instagram profile page"><i class="fab fa-instagram"></i></a>
+      </li><li><a href="https://linkedin.com/in/gregory-sech-2bba64104" aria-label="Go to Linkedin profile page"><i class="fab fa-linkedin"></i></a></li>
+      
+    </ul>
+    <div class="footer">
+      
+      <span>Designed by </span><a href="https://www.caicai.me">CaiCai</a>
+      <div class="by_zola"><a href="https://www.getzola.org/" target="_blank">Proudly published with Zola!</a></div>
+      
+    </div>
+  </div>
+  <div id="main">
+    <div class="page-top animated fadeInDown">
+      <div class="nav">
+        
+        
+        
+        
+        <li><a  href="https://gregorysech.github.io/it/">Home</a></li>
+        <li><a  href="https://gregorysech.github.io/it/about/">Info</a></li><li><a  href="https://gregorysech.github.io/it/tags">Tags</a></li><li><a 
+            href="https://gregorysech.github.io/it/archive/">Archivio</a></li></div>
+      <div class="information">
+        <div class="back_btn">
+          <a onclick="window.history.go(-1)" ><i
+              class="fas fa-chevron-left"></i></a>
+        </div>
+        
+        
+          
+        
+        
+        <div id="language-switch">
+          <button onclick="showLanguages()" aria-label="show languages"><i class="fas fa-globe"></i></button>
+          <div id="languages" style="display: none">
+            
+            <a onclick="window.location.href='https:&#x2F;&#x2F;gregorysech.github.io&#x2F;'"> English </a>
+            
+          </div>
+        </div>
+        
+        <div class="avatar"><img src="https://gregorysech.github.io/images/avatar.jpg"></div>
+      </div>
+    </div>
+    <div class="autopagerize_page_element">
+      <div class="content">
+        
+<article class="post animated fadeInDown">
+  <h1><a href="https:&#x2F;&#x2F;gregorysech.github.io&#x2F;it&#x2F;notes-gitlab-pipelines-locally-poetry&#x2F;">Note su GitLab Pipelines locali in un progetto Poetry</a></h1>
+  
+  <div class="post-content"><p>Automatizzare test quando nuovo codice viene aggiunto ad un progetto è un semplice modo per assicurarsi di non modificare il comportamento di software già sviluppato.
+Sicuramente gli sviluppatori dovranno dedicare tempo e fatica a tradurre i requisiti del software in controlli programmatici, ma la loro automazione riduce il tempo necessario per assicurare la qualità del codice.</p>
+<p>La Max Planck Computing and Data Facility (MPCDF) <a href="https://docs.mpcdf.mpg.de/doc/data/gitlab/devop-tutorial.html">ha pubblicato un bel tutorial</a> sulla propria wiki sull'uso di <a href="https://docs.gitlab.com/ee/ci/pipelines/">GitLab's Pipelines</a> per automatizzare test di progetti Python che usano <a href="https://python-poetry.org/">Poetry</a>. </p>
+<p>A volte, eseguire task automatizzati sulla propria workstation può essere ergonomico o necessario. Se la tua organizzazione non mette a disposizione dei GitLab Runners consoni per il tipo di automazioni che si intendono sviluppare queste note possono aiutarti.
+Ti mostrerò come creare un semplice progetto Python usando <code>poetry</code> e come mettere in piedi un'istanza di GitLab Runner per automatizzare i test ed i controlli di formattazione del codice.</p>
+<h2 id="setup-del-progetto">Setup del progetto</h2>
+<p>Crea il progetto (<code>poetry-cicd-gitlab</code>) usando il comando: <code>poetry new poetry-cicd-gitlab</code>.</p>
+<p>Successivamente io ho modificato la configurazione di progetto in modo che l'ambiente virtuale di Python venga creato nella cartella di progetto usando: <code>poetry config virtualenvs.in-project true --local</code>. Questo create un file <code>poetry.toml</code> contenendo la configurazione di <code>poetry</code> per questo progetto.</p>
+<p>Quindi aggiungo un paio di dipendenze &quot;di sviluppo&quot; (&quot;dev dependencies&quot;) al progetto:  <a href="https://github.com/psf/black">black</a> e <a href="https://docs.pytest.org/">pytest</a>. </p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">poetry</span><span> add</span><span style="color:#bf616a;"> --group</span><span> dev black pytest
+</span></code></pre>
+<p><code>black</code> è una utility per formattare il codice. A me piace il default di <code>black</code> quindi è diventata la mia scelta per progetti Python.
+<code>pytest</code> è un framework per testare programmaticamente applicazioni e librerie sviluppate in Python.</p>
+<p>Crea una funzione da testare dentro al modulo principale di progetto <code>poetry_cicd_gitlab/__init__.py</code> e testala in una funzione chiamata col <a href="https://docs.pytest.org/en/8.2.x/explanation/goodpractices.html#test-discovery">prefisso <code>test</code></a> dentro a <code>tests/test_add.py</code>.
+In questo modo:</p>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># poetry_cicd_gitlab/__init__.py
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">add</span><span>(</span><span style="color:#bf616a;">a</span><span>, </span><span style="color:#bf616a;">b</span><span>):
+</span><span>    </span><span style="color:#b48ead;">return </span><span>a + b
+</span></code></pre>
+<pre data-lang="python" style="background-color:#2b303b;color:#c0c5ce;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#65737e;"># tests/test_add.py
+</span><span style="color:#b48ead;">from </span><span>poetry_cicd_gitlab </span><span style="color:#b48ead;">import </span><span>add
+</span><span>
+</span><span style="color:#b48ead;">def </span><span style="color:#8fa1b3;">test_add</span><span>():
+</span><span>    </span><span style="color:#b48ead;">assert </span><span style="color:#bf616a;">add</span><span>(</span><span style="color:#d08770;">1</span><span>, </span><span style="color:#d08770;">1</span><span>) == </span><span style="color:#d08770;">2
+</span></code></pre>
+<p>Lanciare il comando <code>poetry run pytest</code> dovrebbe identificare un singolo test che dovrebbe passare. </p>
+<p>Ora abbiamo un progetto scarno che possiamo testare e uno strumento per formattare automaticamente il codice che aggiungiamo al nostro progetto.
+Quindi facciamo una repository su GitLab su cui versionare il nostro codice.</p>
+<h1 id="setup-di-gitlab-runner">Setup di GitLab Runner</h1>
+<p>A questo punto vai sulla istanza di GitLab che intendi usare, crea la repository tramite l'interfaccia e carica il progetto.
+Generalmente è una buona idea lasciare fuori dal sistema di controllo versione le cartelle  <code>__pycache__</code>, <code>.venv</code> e <code>.pytest_cache</code> usando un file <code>.gitignore</code>.</p>
+<p>Dopo aver caricato il codice dobbiamo preparare il necessario per la nostra <a href="https://docs.gitlab.com/ee/ci/pipelines/">Pipeline</a>. Prima di procedere suggerisco di comunque dare una buona letta alla risorsa ufficiale <a href="https://docs.gitlab.com/ee/ci/quick_start/">&quot;Tutorial: Create and run your first GitLab CI/CD pipeline&quot;</a> </p>
+<p>In quest'altra <a href="https://docs.gitlab.com/runner/install/docker.html">pagina della documentazione</a> troverai descritto come installare localmente <code>gitlab-runner</code> usando <code>docker</code>. 
+Questo avviene in due step. Il primo è registrare il runner mentre il secondo è eseguirlo.</p>
+<p>Per registrare il runner usa:</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">docker</span><span> run</span><span style="color:#bf616a;"> --rm -i -t </span><span>\
+</span><span style="color:#bf616a;">-v</span><span> ./runner-config:/etc/gitlab-runner \
+</span><span style="color:#bf616a;">-v</span><span> /var/run/docker.sock:/var/run/docker.sock \
+</span><span>gitlab/gitlab-runner:latest \
+</span><span>register</span><span style="color:#bf616a;">  --url </span><span>&lt;gitlab instance url here&gt;  --token &lt;register token here&gt;
+</span></code></pre>
+<p>Questo token viene fornito dalla procedura di registrazione nell'istanza di GitLab. Nello specifico nella tendina delle impostazioni della repository, sezione CI/CD, titoletto &quot;Runners&quot;. </p>
+<p>Ricorda di mettere la spunta a &quot;Run untagged jobs&quot; in modo che il runner possa eseguire qualsiasi task da questa repository.</p>
+<p><img src="https://gregorysech.github.io/it/notes-gitlab-pipelines-locally-poetry/2024-07-22_gitlab_new_runner.png" alt="2024-07-22_gitlab_new_runner.png" /></p>
+<p>Il comando <code>register</code> menzionato precedentemente chiederà di inserire qualche informazione. Alla richiesta di un'immagine di default io ho specificato <code>python:3.11</code> perché il progetto usa Python.
+L'esecuzione del comando genererà un file <code>runner-config/config.toml</code> contenente la configurazione per il runner e può essere editata per meglio rispondere alle esigenze di progetto.</p>
+<p>Per lasciar eseguire al runner i task usiamo</p>
+<pre data-lang="bash" style="background-color:#2b303b;color:#c0c5ce;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#bf616a;">docker</span><span> run</span><span style="color:#bf616a;"> -d --name</span><span> gitlab-runner</span><span style="color:#bf616a;"> --restart</span><span> always \
+</span><span style="color:#bf616a;">  -v</span><span> ./runner-config:/etc/gitlab-runner \
+</span><span style="color:#bf616a;">  -v</span><span> /var/run/docker.sock:/var/run/docker.sock \
+</span><span>  gitlab/gitlab-runner:latest run
+</span></code></pre>
+<p>Ora siamo pronti ad eseguire una Pipeline, dobbiamo solo scriverla!</p>
+<h1 id="scrivere-la-pipeline">Scrivere la Pipeline</h1>
+<p>La pipeline in questo esempio dovrà:</p>
+<ol>
+<li>Rendere disponibile <code>poetry</code>. Nel nostro esempio questo può anche andare bene ma idealmente vogliamo fornire ai nostri job un container. Il container ci eviterebbe un download inutile di dipendenze di progetto quali poetry.</li>
+<li>Lanciare tutti i test e generare un report.</li>
+<li>Controllare che il codice abbia una formattazione consona per <code>black</code> o se è meglio lanciare l'utility. </li>
+</ol>
+<p>Per installare poetry inserisci i seguenti comandi nella sezione <code>before_script</code>. In questo modo verranno eseguiti prima di ogni job.</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">before_script</span><span>:
+</span><span>  - </span><span style="color:#a3be8c;">curl -sSL https://install.python-poetry.org | POETRY_HOME=/etc/poetry python3 -
+</span><span>  - </span><span style="color:#a3be8c;">export PATH=/etc/poetry/bin:PATH
+</span><span>  - </span><span style="color:#a3be8c;">poetry install
+</span></code></pre>
+<p>La nostra pipeline non deve per forza essere lanciata in successione quindi possiamo avere un solo elemento dentro alla sezione <code>stages</code> di <code>.gitlab-ci.yml</code>': <code>checks</code>.</p>
+<p>Il job per verificare la formattazione è semplice: </p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">job_format</span><span>:
+</span><span>  </span><span style="color:#bf616a;">stage</span><span>: </span><span style="color:#a3be8c;">checks
+</span><span>  </span><span style="color:#bf616a;">script</span><span>:
+</span><span>    - </span><span style="color:#a3be8c;">echo &quot;Checking code formatting&quot;
+</span><span>    - </span><span style="color:#a3be8c;">poetry run black . --check
+</span></code></pre>
+<p>Ovvero lancia <code>black . --check</code> usando la versione installata da <code>poetry</code>.</p>
+<p>Invece l'automazione di <code>pytest</code> è lievemente più complessa. É necessario specificare che verrà generato un artefatto: il test report nel formato JUnit.</p>
+<pre data-lang="yaml" style="background-color:#2b303b;color:#c0c5ce;" class="language-yaml "><code class="language-yaml" data-lang="yaml"><span style="color:#bf616a;">job_test</span><span>:
+</span><span>  </span><span style="color:#bf616a;">stage</span><span>: </span><span style="color:#a3be8c;">checks
+</span><span>  </span><span style="color:#bf616a;">script</span><span>:
+</span><span>    - </span><span style="color:#a3be8c;">echo &quot;Running tests&quot;
+</span><span>    - </span><span style="color:#a3be8c;">poetry run pytest --junit-xml=report.xml
+</span><span>  </span><span style="color:#bf616a;">artifacts</span><span>:
+</span><span>    </span><span style="color:#bf616a;">when</span><span>: </span><span style="color:#a3be8c;">always
+</span><span>    </span><span style="color:#bf616a;">paths</span><span>:
+</span><span>      - </span><span style="color:#a3be8c;">report.xml
+</span><span>    </span><span style="color:#bf616a;">reports</span><span>:
+</span><span>      </span><span style="color:#bf616a;">junit</span><span>: </span><span style="color:#a3be8c;">report.xml
+</span></code></pre>
+<p>Con questo la nostra pipeline è pronta, possiamo fare commit e push del file  <code>.gitlab-ci.yml</code>nella nostra repository. GitLab si occuperà di invocare l'istanza di <code>gitlab-runner</code> registrata in precedenza ed eseguire gli script che abbiamo definito.</p>
+<h1 id="conclusione">Conclusione</h1>
+<p>In queste note ho simulato cosa fare per usare test automatizzati in istanze GitLab prive di istanze di GitLab Runner.
+Ho creato un progettino ai minimi termini usando <code>poetry</code> e preparato un'istanza locale di GitLab Runner per eseguire una pipeline di automazione. Il progetto è consultabile in <a href="https://gitlab.com/GregorySech/poetry_cicd_gitlab">questa repository pubblica</a>!
+La pipeline automatizza i controlli sul formato del codice usando <code>black</code> e sui test ogni volta che viene fatto commit di codice nella repository. 
+La pipeline proposta necessita di modifiche ingenti per soddisfare al meglio le necessità di progetti realistici senza sprecare risorse ma è un punto di partenza.</p>
+</div>
+  <div class="post-footer">
+    <div class="meta">
+      <div class="info">
+        
+        <i class="far fa-sun"></i><span class="date">2024-07-22</span>
+        
+        
+        <i class="fas fa-tags"></i>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/GitLab">&nbsp;GitLab</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/Python">&nbsp;Python</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/Poetry">&nbsp;Poetry</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/CICD">&nbsp;CICD</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/Docker">&nbsp;Docker</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/Italiano">&nbsp;Italiano</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/Italian">&nbsp;Italian</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</article>
+<div class="share">
+  <div class="weibo">
+    <a class="fab fa-weibo"
+      href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a>
+  </div>
+  <div class="twitter">
+    <a class="fab fa-twitter"
+      href="http://twitter.com/share?text=Note su GitLab Pipelines locali in un progetto Poetry&url=https:&#x2F;&#x2F;gregorysech.github.io&#x2F;it&#x2F;notes-gitlab-pipelines-locally-poetry&#x2F;&hashtags=GitLab,Python,Poetry,CICD,Docker,Italiano,Italian"></a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function showLanguages() {
+      let currentDisplay = document.getElementById("languages").style.display;
+      if (currentDisplay == 'none') {
+        document.getElementById("languages").style.display = 'block';
+      } else {
+        document.getElementById("languages").style.display = 'none';
+      }
+    }
+  </script>
+</body>
+
+</html>

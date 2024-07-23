@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en"  class="theme--light" >
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://gregorysech.github.io/images/apple-touch-icon-144x144.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://gregorysech.github.io/images/apple-touch-icon-120x120.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://gregorysech.github.io/images/apple-touch-icon-72x72.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="57x57" href="https://gregorysech.github.io/images/apple-touch-icon-57x57.png" />
+  <link rel="short icon" href="https://gregorysech.github.io/images/favicon.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://gregorysech.github.io/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" rel="stylesheet">
+  <title>Gregory Sech • TIL 2024-03-11: Formati di output di Tesseract OCR</title>
+  
+  
+  
+</head>
+
+<body>
+  <div id="sidebar" class="animated fadeInDown">
+    <div class="logo-title">
+      <div class="title">
+        <img src=https://gregorysech.github.io/images/logo@2x.png style="width:127px;" alt="logo" />
+        <h3><a href="https://gregorysech.github.io/it/">Gregory Sech</a></h3>
+        <div class="description">
+          <p>Likes problems and solutions.</p>
+        </div>
+      </div>
+    </div>
+    <ul class="social-links"><li><a href="https://github.com/GregorySech" aria-label="Go to Github profile page"><i class="fab fa-github"></i></a></li><li><a href="https://gitlab.com/GregorySech" aria-label="Go to Gitlab profile page"><i class="fab fa-gitlab"></i></a></li><li><a href="https://www.instagram.com/gregorysech" aria-label="Go to Instagram profile page"><i class="fab fa-instagram"></i></a>
+      </li><li><a href="https://linkedin.com/in/gregory-sech-2bba64104" aria-label="Go to Linkedin profile page"><i class="fab fa-linkedin"></i></a></li>
+      
+    </ul>
+    <div class="footer">
+      
+      <span>Designed by </span><a href="https://www.caicai.me">CaiCai</a>
+      <div class="by_zola"><a href="https://www.getzola.org/" target="_blank">Proudly published with Zola!</a></div>
+      
+    </div>
+  </div>
+  <div id="main">
+    <div class="page-top animated fadeInDown">
+      <div class="nav">
+        
+        
+        
+        
+        <li><a  href="https://gregorysech.github.io/it/">Home</a></li>
+        <li><a  href="https://gregorysech.github.io/it/about/">Info</a></li><li><a  href="https://gregorysech.github.io/it/tags">Tags</a></li><li><a 
+            href="https://gregorysech.github.io/it/archive/">Archivio</a></li></div>
+      <div class="information">
+        <div class="back_btn">
+          <a onclick="window.history.go(-1)" ><i
+              class="fas fa-chevron-left"></i></a>
+        </div>
+        
+        
+          
+        
+        
+        <div id="language-switch">
+          <button onclick="showLanguages()" aria-label="show languages"><i class="fas fa-globe"></i></button>
+          <div id="languages" style="display: none">
+            
+            <a onclick="window.location.href='https:&#x2F;&#x2F;gregorysech.github.io&#x2F;'"> English </a>
+            
+          </div>
+        </div>
+        
+        <div class="avatar"><img src="https://gregorysech.github.io/images/avatar.jpg"></div>
+      </div>
+    </div>
+    <div class="autopagerize_page_element">
+      <div class="content">
+        
+<article class="post animated fadeInDown">
+  <h1><a href="https:&#x2F;&#x2F;gregorysech.github.io&#x2F;it&#x2F;2024-06-12-til&#x2F;">TIL 2024-03-11: Formati di output di Tesseract OCR</a></h1>
+  
+  <div class="post-content"><p><a href="https://github.com/madmaze/pytesseract">Tesseract</a> permette di salvare i risultati delle proprie analisi in vari formati. Alcuni sono formati d'uso comune come <code>txt</code>, <code>tsv</code> and <code>pdf</code>. Altri sono specializzati per le analisi OCR come &quot;Analyzed Layout and Text Object&quot; (ALTO) ed hOCR.
+Anche il formato PAGE è menzionato in questa <a href="https://github.com/tesseract-ocr/tesseract/blob/main/doc/tesseract.1.asc">pagina del manuale</a> ma la versione di Tesseract ottenibile tramite Homebrew's non sembra supportare l'opzione.</p>
+<h1 id="analyzed-layout-and-text-object-alto">Analyzed Layout and Text Object (ALTO)</h1>
+<p><a href="https://academic.oup.com/dsh/article/18/1/77/1047620?login=true">ALTO</a> è basato su uno schema XML e descrive i metadati riguardanti il layout ed il contenuto di testo su supporti fisici. Questo formato è un'estensione del  Metadata Encoding and Transmission Schema per librerie digitali. </p>
+<p>Il suo sviluppo iniziò nel 2002 durante il Metadata Engine Project per via della necessità di salvare metadati riguardo al posizionamento del testo all'interno degli scritti presenti in una libreria digitale. Al tempo non c'erano standard per questo tipo di dati.</p>
+<p>Il file che ho analizzato con Tesseract non contiene la sezione <code>&lt;Styles&gt;</code>. Solo <code>&lt;Description&gt;</code> e <code>&lt;Layout&gt;</code> sono presenti.</p>
+<p>Nella sezione <code>&lt;Description&gt;</code> sono presenti alcuni metadati sui dati analizzati, sul processo di OCR ed sui risultati dell'analisi.</p>
+<pre data-lang="XML" style="background-color:#2b303b;color:#c0c5ce;" class="language-XML "><code class="language-XML" data-lang="XML"><span>[...]
+</span><span>&lt;</span><span style="color:#bf616a;">Description</span><span>&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">MeasurementUnit</span><span>&gt;pixel&lt;/</span><span style="color:#bf616a;">MeasurementUnit</span><span>&gt;
+</span><span>
+</span><span>	&lt;</span><span style="color:#bf616a;">sourceImageInformation</span><span>&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">fileName</span><span>&gt;data/totally_legally_acquired_document_name/page10.jpg&lt;/</span><span style="color:#bf616a;">fileName</span><span>&gt;
+</span><span>	&lt;/</span><span style="color:#bf616a;">sourceImageInformation</span><span>&gt;
+</span><span>
+</span><span>	&lt;</span><span style="color:#bf616a;">OCRProcessing </span><span style="color:#d08770;">ID</span><span>=&quot;</span><span style="color:#a3be8c;">OCR_0</span><span>&quot;&gt;
+</span><span>		&lt;</span><span style="color:#bf616a;">ocrProcessingStep</span><span>&gt;
+</span><span>			&lt;</span><span style="color:#bf616a;">processingSoftware</span><span>&gt;
+</span><span>				&lt;</span><span style="color:#bf616a;">softwareName</span><span>&gt;tesseract 5.3.4&lt;/</span><span style="color:#bf616a;">softwareName</span><span>&gt;
+</span><span>			&lt;/</span><span style="color:#bf616a;">processingSoftware</span><span>&gt;
+</span><span>		&lt;/</span><span style="color:#bf616a;">ocrProcessingStep</span><span>&gt;
+</span><span>	&lt;/</span><span style="color:#bf616a;">OCRProcessing</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">Description</span><span>&gt;
+</span><span>[...]
+</span></code></pre>
+<p><code>&lt;Layout&gt;</code> contiene appunto la descrizione del layout del testo.</p>
+<h1 id="hocr">hOCR</h1>
+<p><a href="https://ieeexplore.ieee.org/document/4377078">hOCR</a> nasce per cercare di avere un singolo formato per rappresentare i risultati di un'analisi OCR sia nella fase intermedia che in quella finale. Quindi non solo sapere il testo contenuto nell'immagine ma anche informazioni di layout. 
+Si basa sui formati XHTML e CSS. L'informazione OCR viene aggiunta ad HTML tramite i tag <code>&lt;div&gt;</code> e <code>&lt;span&gt;</code> il che la rende invisibile al rendering dei web-browser.</p>
+<p>Segue un esempio di un output hOCR.</p>
+<pre data-lang="HTML" style="background-color:#2b303b;color:#c0c5ce;" class="language-HTML "><code class="language-HTML" data-lang="HTML"><span>&lt;?</span><span style="color:#bf616a;">xml </span><span style="color:#d08770;">version</span><span>=&quot;</span><span style="color:#a3be8c;">1.0</span><span>&quot; </span><span style="color:#d08770;">encoding</span><span>=&quot;</span><span style="color:#a3be8c;">UTF-8</span><span>&quot;?&gt;
+</span><span>&lt;!</span><span style="color:#b48ead;">DOCTYPE </span><span style="color:#d08770;">html </span><span style="color:#b48ead;">PUBLIC </span><span>&quot;</span><span style="color:#a3be8c;">-//W3C//DTD XHTML 1.0 Transitional//EN</span><span>&quot;
+</span><span>&quot;</span><span style="color:#a3be8c;">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</span><span>&quot;&gt;
+</span><span>
+</span><span>&lt;</span><span style="color:#bf616a;">html </span><span style="color:#d08770;">xmlns</span><span>=&quot;</span><span style="color:#a3be8c;">http://www.w3.org/1999/xhtml</span><span>&quot; </span><span style="color:#d08770;">xml:lang</span><span>=&quot;</span><span style="color:#a3be8c;">en</span><span>&quot; </span><span style="color:#d08770;">lang</span><span>=&quot;</span><span style="color:#a3be8c;">en</span><span>&quot;&gt;
+</span><span>&lt;</span><span style="color:#bf616a;">head</span><span>&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">title</span><span>&gt;&lt;/</span><span style="color:#bf616a;">title</span><span>&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">meta </span><span style="color:#d08770;">http-equiv</span><span>=&quot;</span><span style="color:#a3be8c;">Content-Type</span><span>&quot; </span><span style="color:#d08770;">content</span><span>=&quot;</span><span style="color:#a3be8c;">text/html;charset=utf-8</span><span>&quot;/&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">meta </span><span style="color:#d08770;">name</span><span>=&#39;</span><span style="color:#a3be8c;">ocr-system</span><span>&#39; </span><span style="color:#d08770;">content</span><span>=&#39;</span><span style="color:#a3be8c;">tesseract 5.3.4</span><span>&#39; /&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">meta </span><span style="color:#d08770;">name</span><span>=&#39;</span><span style="color:#a3be8c;">ocr-capabilities</span><span>&#39; </span><span style="color:#d08770;">content</span><span>=&#39;</span><span style="color:#a3be8c;">ocr_page ocr_carea ocr_par ocr_line ocrx_word ocrp_wconf</span><span>&#39;/&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">head</span><span>&gt;
+</span><span>
+</span><span>&lt;</span><span style="color:#bf616a;">body</span><span>&gt;
+</span><span>	&lt;</span><span style="color:#bf616a;">div </span><span style="color:#d08770;">class</span><span>=&#39;</span><span style="color:#a3be8c;">ocr_page</span><span>&#39; </span><span style="color:#8fa1b3;">id</span><span>=&#39;</span><span style="color:#a3be8c;">page_1</span><span>&#39; </span><span style="color:#d08770;">title</span><span>=&#39;</span><span style="color:#a3be8c;">image &quot;data/totally_legally_acquired_document_name/page10.jpg&quot;; bbox 0 0 2466 3639; ppageno 0; scan_res 70 70</span><span>&#39;&gt;
+</span><span>	[...]
+</span><span>	&lt;/</span><span style="color:#bf616a;">div</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">body</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#bf616a;">html</span><span>&gt;
+</span></code></pre>
+<p>Grazie alla scelta di usare come fondamento di questo formato tecnologie web ben conosciute, visualizzare i risultati degli OCR diventa molto facile grazie a progetti come <a href="https://github.com/kba/hocrjs">hocrjs</a>.</p>
+<p>Si può inserire un tag particolare (<code>&lt;script src=&quot;https://unpkg.com/hocrjs&quot;&gt;&lt;/script&gt;</code>) alla fine del &quot;body&quot; del documento prima di aprirlo tramite browser e
+voilà, ora possiamo visualizzare la struttura del documento ottenuta da Tesseract!</p>
+<p>Grazie ad hocrjs ho scoperto <a href="https://www.tampermonkey.net/index.php">Tampermonkey</a> però non sono riuscito ad usarlo per aggiungere il tag direttamente nel browser nonostante abbia correttamente caricato l'userscript che descrivono.</p>
+</div>
+  <div class="post-footer">
+    <div class="meta">
+      <div class="info">
+        
+        <i class="far fa-sun"></i><span class="date">2024-03-11</span>
+        
+        
+        <i class="fas fa-tags"></i>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/Tesseract">&nbsp;Tesseract</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/NLP">&nbsp;NLP</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/data">&nbsp;data</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/formats">&nbsp;formats</a>
+        
+        <a class="tag" href="https://gregorysech.github.io/it/tags/OCR">&nbsp;OCR</a>
+        
+        
+      </div>
+    </div>
+  </div>
+</article>
+<div class="share">
+  <div class="weibo">
+    <a class="fab fa-weibo"
+      href="javascript:void((function(s,d,e){try{}catch(e){}var f='http://service.weibo.com/share/share.php?',u=d.location.href,p=['url=',e(u),'&title=',e(d.title),'&appkey=2924220432'].join('');function a(){if(!window.open([f,p].join(''),'mb',['toolbar=0,status=0,resizable=1,width=620,height=450,left=',(s.width-620)/2,',top=',(s.height-450)/2].join('')))u.href=[f,p].join('');};if(/Firefox/.test(navigator.userAgent)){setTimeout(a,0)}else{a()}})(screen,document,encodeURIComponent));"></a>
+  </div>
+  <div class="twitter">
+    <a class="fab fa-twitter"
+      href="http://twitter.com/share?text=TIL 2024-03-11: Formati di output di Tesseract OCR&url=https:&#x2F;&#x2F;gregorysech.github.io&#x2F;it&#x2F;2024-06-12-til&#x2F;&hashtags=Tesseract,NLP,data,formats,OCR"></a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function showLanguages() {
+      let currentDisplay = document.getElementById("languages").style.display;
+      if (currentDisplay == 'none') {
+        document.getElementById("languages").style.display = 'block';
+      } else {
+        document.getElementById("languages").style.display = 'none';
+      }
+    }
+  </script>
+</body>
+
+</html>
